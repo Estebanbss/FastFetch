@@ -1,20 +1,8 @@
 import { request, RequestOptions } from 'http';
-
-interface FastFetchRequestConfig {
-  headers?: Record<string, string>;
-  timeout?: number;
-  data?: any;
-}
-
-interface FastFetchResponse<T = any> {
-  data: T;
-  status: number;
-  statusText: string;
-  headers: Record<string, string>;
-}
+import { HTTPClientConfig , HTTPRequestConfig, HTTPResponse } from './interfaces.js';
 
 export default class FastFetch {
-  private static makeRequest<T>(method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', url: string, config: FastFetchRequestConfig = {}): Promise<FastFetchResponse<T>> {
+  private static makeRequest<T>(method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', url: string, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> {
     return new Promise((resolve, reject) => {
       const { hostname, pathname, port, protocol } = new URL(url);
       const data = config.data ? JSON.stringify(config.data) : null;
@@ -42,7 +30,7 @@ export default class FastFetch {
         res.on('end', () => {
           try {
             const parsedData = JSON.parse(responseData);
-            const response: FastFetchResponse<T> = {
+            const response: HTTPResponse<T> = {
               data: parsedData,
               status: res.statusCode || 200,
               statusText: res.statusMessage || 'OK',
@@ -73,23 +61,23 @@ export default class FastFetch {
     });
   }
 
-  static get<T>(url: string, config: FastFetchRequestConfig = {}): Promise<FastFetchResponse<T>> {
+  static get<T>(url: string, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> {
     return this.makeRequest<T>('GET', url, config);
   }
 
-  static post<T>(url: string, data: any, config: FastFetchRequestConfig = {}): Promise<FastFetchResponse<T>> {
+  static post<T>(url: string, data: any, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> {
     return this.makeRequest<T>('POST', url, { ...config, data });
   }
 
-  static put<T>(url: string, data: any, config: FastFetchRequestConfig = {}): Promise<FastFetchResponse<T>> {
+  static put<T>(url: string, data: any, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> {
     return this.makeRequest<T>('PUT', url, { ...config, data });
   }
 
-  static delete<T>(url: string, config: FastFetchRequestConfig = {}): Promise<FastFetchResponse<T>> {
+  static delete<T>(url: string, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> {
     return this.makeRequest<T>('DELETE', url, config);
   }
 
-  static patch<T>(url: string, data: any, config: FastFetchRequestConfig = {}): Promise<FastFetchResponse<T>> {
+  static patch<T>(url: string, data: any, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> {
     return this.makeRequest<T>('PATCH', url, { ...config, data });
   }
 }
