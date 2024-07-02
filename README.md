@@ -1,6 +1,6 @@
 # ⚡ FastFetch
 
-[![npm version](https://badge.fury.io/js/fast-fetch.svg)](https://badge.fury.io/js/fast-fetch)
+[![npm version](https://badge.fury.io/js/fast-fetch.svg)](https://badge.fury.io/js/fastfetch)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badge/)
 
@@ -27,12 +27,25 @@
 
 ## Example Usage
 
+### GET Request
+
+Making a GET request:
+
+```typescript
+import FastFetch from 'fastfetch';
+
+FastFetch.get('http://api.example.com/data')
+  .then(response => console.log('GET response:', response.data))
+  .catch(error => console.error('GET error:', error));
+
+````
+
 ### POST Request
 
 Making a POST request with custom headers and timeout:
 
 ```typescript
-import FastFetch from 'fast-fetch';
+import FastFetch from 'fastfetch';
 
 FastFetch.post('http://api.example.com/data', { key: 'value' }, {
   headers: {
