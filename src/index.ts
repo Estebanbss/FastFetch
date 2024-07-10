@@ -1,7 +1,7 @@
 import { fetch, RequestInit as UndiciRequestInit } from 'undici';
 import { HTTPRequestConfig, HTTPResponse } from './interfaces';
 
-export default class FastFetch {
+class FastFetch {
 
   private static async makeRequest<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
@@ -19,7 +19,9 @@ export default class FastFetch {
     };
 
     if (timeout) {
-      options.signal = AbortSignal.timeout(timeout);
+      const controller = new AbortController();
+      options.signal = controller.signal;
+      setTimeout(() => controller.abort(), timeout);
     }
 
     try {
@@ -60,4 +62,25 @@ export default class FastFetch {
   static patch<T>(url: string, data: any, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> {
     return this.makeRequest<T>('PATCH', url, { ...config, data });
   }
+
+  static request<T>(config: HTTPRequestConfig): Promise<HTTPResponse<T>> {
+    const { method = 'GET', url, data, ...restConfig } = config;
+    return this.makeRequest<T>(method as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', url, { ...restConfig, data });
+  }
 }
+
+const createInstance = () => {
+  const instance = (config: HTTPRequestConfig) => FastFetch.request(config);
+  instance.get = <T>(url: string, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> => FastFetch.get(url, config);
+  instance.post = <T>(url: string, data: any, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> => FastFetch.post(url, data, config);
+  instance.put = <T>(url: string, data: any, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> => FastFetch.put(url, data, config);
+  instance.delete = <T>(url: string, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> => FastFetch.delete(url, config);
+  instance.patch = <T>(url: string, data: any, config: HTTPRequestConfig = {}): Promise<HTTPResponse<T>> => FastFetch.patch(url, data, config);
+
+  return instance;
+};
+
+const fastFetch = createInstance();
+
+export default fastFetch;
+export { FastFetch };

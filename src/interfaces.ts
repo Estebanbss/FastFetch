@@ -1,4 +1,6 @@
 export interface HTTPClientConfig {
+     method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+     url?: string;
      baseURL?: string;
      headers?: Record<string, string>;
      timeout?: number;
