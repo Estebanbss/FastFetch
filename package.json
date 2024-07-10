@@ -5,20 +5,28 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-      "build": "tsc"
+        "build": "tsc"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/NanoLimit/FastFetch.git"
+        "type": "git",
+        "url": "git+https://github.com/NanoLimit/FastFetch.git"
     },
     "author": "NanoLimit",
     "license": "MIT",
     "bugs": {
-      "url": "https://github.com/NanoLimit/FastFetch/issues"
+        "url": "https://github.com/NanoLimit/FastFetch/issues"
     },
     "homepage": "https://github.com/NanoLimit/FastFetch#readme",
     "dependencies": {
-      "@types/node": "^20.14.9",
-      "typescript": "^5.5.3"
+        "@types/node": "^20.14.9",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.5.3",
+        "undici": "^6.19.2"
+    },
+    "compilerOptions": {
+        "module": "ESNext"
+    },
+    "ts-node": {
+        "esm": true
     }
-}  
+}
